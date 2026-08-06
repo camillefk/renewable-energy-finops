@@ -31,6 +31,6 @@ The pipeline ingests weather data and solar energy generation estimates, process
 
 ---
 
-**Built by:** @camillefk
-**Created:** August 2026
+**Built by:** @camillefk  
+**Created:** August 2026  
 **Last Updated:** August 05, 2026
