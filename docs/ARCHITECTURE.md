@@ -28,3 +28,9 @@ The pipeline ingests weather data and solar energy generation estimates, process
 * **Purpose:** Consolidate business metrics for reporting and Business Intelligence (BI).
 * **Primary Table:** `fct_energy_generation` (business-oriented aggregated tables).
 * **Business Rule:** Combine weather data with solar energy generation data to calculate efficiency metrics and assess operational impact.
+
+---
+
+**Built by:** @camillefk
+**Created:** August 2026
+**Last Updated:** August 05, 2026
