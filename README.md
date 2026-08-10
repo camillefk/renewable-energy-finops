@@ -25,23 +25,23 @@
 ```mermaid
 graph TD
     %% Extract
-    A[External APIs<br>Open-Meteo & PVGIS] -->|Airflow Ingestion| B
+    A["External APIs<br>Open-Meteo & PVGIS"] -->|"Airflow Ingestion"| B
 
     %% Bronze Layer
-    subgraph GCP [Google Cloud Platform]
-        B[(GCS: Bronze Layer)<br>Raw JSON Data<br>30-day Lifecycle]
+    subgraph GCP ["Google Cloud Platform"]
+        B[("GCS: Bronze Layer<br>Raw JSON Data<br>30-day Lifecycle")]
         
         %% Silver Layer
-        B -->|Pydantic Validation &<br>BigQuery MERGE| C
-        C[(BigQuery: Silver Layer)<br>Trusted & Deduplicated]
+        B -->|"Pydantic Validation &<br>BigQuery MERGE"| C
+        C[("BigQuery: Silver Layer<br>Trusted & Deduplicated")]
         
         %% Gold Layer
-        C -->|dbt Transformations| D
-        D[(BigQuery: Gold Layer)<br>Aggregated Marts]
+        C -->|"dbt Transformations"| D
+        D[("BigQuery: Gold Layer<br>Aggregated Marts")]
     end
 
     %% BI Layer
-    D -->|Data Viz| E[Looker Studio / Metabase]
+    D -->|"Data Viz"| E["Looker Studio / Metabase"]
 ```
 ---
 
