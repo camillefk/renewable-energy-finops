@@ -2,7 +2,7 @@
 
 > This guide documents the two external APIs used in this project — **PVGIS** (solar irradiance) and **Open-Meteo** (weather data) — including expected JSON response schemas, rate limits, and known quirks discovered during integration testing.
 
-Reference implementations: [`test_pvgis_api.py`](examples/test_pvgis_api.py) and [`test_openmeteo_api.py`](examples/test_openmeteo_api.py).
+Reference implementations: [`test_pvgis_api.py`](../examples/test_pvgis_api.py) and [`test_openmeteo_api.py`](../examples/test_openmeteo_api.py).
 
 ---
 
