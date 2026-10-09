@@ -123,18 +123,6 @@ gcloud auth application-default login --impersonate-service-account=renewable-en
 PVGIS_MAX_YEAR = 2020
 ```
 
-### 4. Access Denied to Google Cloud Storage (HTTP 403 Forbidden)
-
-* **Symptom:** The file is successfully extracted to the local volume, but the `upload_to_gcs_bronze` task fails with a permission denied error stating that the Service Account lacks the `storage.objects.create` role (or that the resource may not exist).
-
-* **Root Cause:** A naming misalignment between the infrastructure provisioning and the application code. Terraform was configured to generate buckets with the Project ID suffix (e.g., `bronze-raw-data-bucket-peppy-coda-483817-b1`), while the Airflow DAG attempted to write to the generic base name `bronze-raw-data-bucket`. Because GCP Bucket names use a global namespace, the API call collided with a non-existent or third-party resource.
-
-* **Implemented Solution:** The actual bucket name instantiated by Terraform was set as the default in the project configuration file (`utils/config.py`):
-
-```text
-GCS_BUCKET_DEFAULT = "bronze-raw-data-bucket-peppy-coda-483817-b1"
-```
-
 ## 9. How to test locally
 
 ```bash
