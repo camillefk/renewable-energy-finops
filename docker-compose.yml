@@ -56,7 +56,8 @@ services:
       AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
       AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'True'
-      GOOGLE_APPLICATION_CREDENTIALS: /airflow/gcp-key.json
+      GOOGLE_APPLICATION_CREDENTIALS: /airflow/gcp-credentials.json
+      GOOGLE_CLOUD_PROJECT: "peppy-coda-483817-b1"
     ports:
       - "8080:8080"
     volumes:
@@ -64,7 +65,7 @@ services:
       - ./airflow/plugins:/airflow/plugins
       - ./airflow/logs:/airflow/logs
       - ./airflow/config:/airflow/config
-      - ${HOME}/.config/gcloud/application_default_credentials.json:/airflow/gcp-key.json:ro
+      - ./gcp-credentials.json:/airflow/gcp-credentials.json:ro
     command: >
       bash -c "airflow db upgrade && 
                airflow webserver"
@@ -98,13 +99,14 @@ services:
       AIRFLOW__CELERY__BROKER_URL: redis://redis:6379/0
       AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
-      GOOGLE_APPLICATION_CREDENTIALS: /airflow/gcp-key.json
+      GOOGLE_APPLICATION_CREDENTIALS: /airflow/gcp-credentials.json
+      GOOGLE_CLOUD_PROJECT: "peppy-coda-483817-b1"
     volumes:
       - ./airflow/dags:/airflow/dags
       - ./airflow/plugins:/airflow/plugins
       - ./airflow/logs:/airflow/logs
       - ./airflow/config:/airflow/config
-      - ${HOME}/.config/gcloud/application_default_credentials.json:/airflow/gcp-key.json:ro
+      - ./gcp-credentials.json:/airflow/gcp-credentials.json:ro
     command: airflow scheduler
     networks:
       - renewable-network
@@ -128,13 +130,14 @@ services:
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
       AIRFLOW__CELERY__BROKER_URL: redis://redis:6379/0
       AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres:5432/airflow
-      GOOGLE_APPLICATION_CREDENTIALS: /airflow/gcp-key.json
+      GOOGLE_APPLICATION_CREDENTIALS: /airflow/gcp-credentials.json
+      GOOGLE_CLOUD_PROJECT: "peppy-coda-483817-b1"
     volumes:
       - ./airflow/dags:/airflow/dags
       - ./airflow/plugins:/airflow/plugins
       - ./airflow/logs:/airflow/logs
       - ./airflow/config:/airflow/config
-      - ${HOME}/.config/gcloud/application_default_credentials.json:/airflow/gcp-key.json:ro
+      - ./gcp-credentials.json:/airflow/gcp-credentials.json:ro
     command: airflow celery worker
     networks:
       - renewable-network

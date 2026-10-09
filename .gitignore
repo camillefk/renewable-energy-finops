@@ -5,3 +5,4 @@ __pycache__/
 *.tfstate*
 terraform.tfvars
 airflow/logs/
+gcp-credentials.json
