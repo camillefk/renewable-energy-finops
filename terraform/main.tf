@@ -15,7 +15,7 @@ module "bigquery_layers" {
   project_id          = var.project_id
   region              = var.region
   silver_dataset_name = "silver_trusted_dataset"
-  gold_dataset_name   = "golt_analytical_mart"
+  gold_dataset_name   = "gold_analytical_mart"
 }
 
 module "iam_roles" {

@@ -27,6 +27,7 @@ OPENMETEO_HOURLY_VARS = [
     "wind_speed_100m",
     "temperature_2m",
     "relative_humidity_2m",
+    "shortwave_radiation",
 ]
 
 PVGIS_BASE_URL = "https://re.jrc.ec.europa.eu/api/v5_2"

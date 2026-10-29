@@ -45,3 +45,24 @@ def log_event(logger_: logging.Logger, event: str, level: str = "info", **fields
     """
     record = {"event": event, **fields}
     getattr(logger_, level)(json.dumps(record, default=str))
+
+def download_json_from_gcs(gcs_uri: str) -> Dict[str, Any]:
+    """Downloads a JSON file from a GCS URI (gs://bucket/blob) and parses it.
+    
+    Expected format: gs://bucket_name/path/to/file.json
+    """
+    from google.cloud import storage
+
+    if not gcs_uri.startswith("gs://"):
+        raise ValueError(f"Invalid GCS URI: {gcs_uri}")
+
+    path_parts = gcs_uri.replace("gs://", "").split("/", 1)
+    bucket_name = path_parts[0]
+    blob_name = path_parts[1]
+
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+    
+    content = blob.download_as_text()
+    return json.loads(content)

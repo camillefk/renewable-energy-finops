@@ -84,7 +84,7 @@ def fetch_pvgis_daily(
         "lon": longitude,
         "startyear": effective_year,
         "endyear": effective_year,
-        "components": 1,
+        "components": 0,
         "outputformat": "json",
         "raddatabase": "PVGIS-ERA5"
     }
