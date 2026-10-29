@@ -39,7 +39,7 @@ Physical ranges:
 | `cloud_cover` | 0 ... 100 | % |
 | `wind_speed_100m` (Open-Meteo) | 0 ... 200 | km/h |
 | `WS10m` (PVGIS) | 0 ... 60 | m/s |
-| `H_sun` (PVGIS) | 0 ... 90 |	° |
+| `H_sun` (PVGIS) | -90 ... 90 |	° |
 
 ### 2.2 Business-rule Level (`check_business_rules`)
 
