@@ -61,9 +61,13 @@ from utils.silver import (
     staging_table_name,
     to_silver_rows,
 )
+from airflow.operators.bash import BashOperator
 
 logger = logging.getLogger(__name__)
 
+DBT_BIN = "/home/airflow/dbt-venv/bin/dbt"
+DBT_DIR = "/airflow/dbt"
+DBT_FLAGS = f"--project-dir {DBT_DIR} --profiles-dir {DBT_DIR}"
 
 def _fail_fast(event: str, exc: DataQualityError, **context: Any) -> None:
     """Log the quality failure as structured data, then fail the task WITHOUT retries.
@@ -326,6 +330,8 @@ def renewable_energy_ingestion():
             "rows_affected": affected,
         }
 
+    
+
     # --- OpenMeteo ------------------------------- #
 
     weather_metadata = fetch_weather_data.expand(city=CITIES)
@@ -354,6 +360,17 @@ def renewable_energy_ingestion():
     load_bronze_to_silver_bq.override(task_id="load_solar_to_silver_bq")(
         validated=solar_validated, source="pvgis"
     )
+
+    dbt_run_and_test = BashOperator(
+    task_id="dbt_run_and_test",
+    bash_command=(
+        "set -euo pipefail; "
+        f"{DBT_BIN} deps {DBT_FLAGS} && "
+        f"{DBT_BIN} build {DBT_FLAGS} && "
+        f"{DBT_BIN} docs generate {DBT_FLAGS}"
+    ),
+    retries=1,
+)
 
 
 renewable_energy_ingestion()

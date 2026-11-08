@@ -6,3 +6,6 @@ __pycache__/
 terraform.tfvars
 airflow/logs/
 gcp-credentials.json
+target/
+dbt_packages/
+logs/

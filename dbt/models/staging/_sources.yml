@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: silver
+    description: "Silver layer (trusted, deduplicated) written by the Airflow MERGE task."
+    database: "{{ env_var('GCP_PROJECT_ID') }}"
+    schema: silver_trusted_dataset
+    tables:
+      - name: silver_weather_hourly
+        description: "Hourly weather readings from Open-Meteo."
+      - name: silver_solar_hourly
+        description: "Hourly solar irradiance from PVGIS."

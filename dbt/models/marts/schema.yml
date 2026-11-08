@@ -1,0 +1,65 @@
+version: 2
+
+models:
+  - name: fct_energy_generation
+    description: >
+      Gold fact table (hourly grain) combining weather drivers with solar and wind generation
+      for the reference plants. Incremental (insert_overwrite), partitioned by observation_date,
+      clustered by station_id. Solar uses PVGIS output when present, otherwise a modelled estimate.
+    columns:
+      - name: energy_generation_key
+        description: "Surrogate key of (observation_at, station_id)."
+        data_tests: [unique, not_null]
+      - name: observation_at
+        data_tests: [not_null]
+      - name: observation_date
+        data_tests: [not_null]
+      - name: station_id
+        data_tests: [not_null]
+      - name: city
+        data_tests: [not_null]
+      - name: solar_capacity_factor
+        description: "Solar output per installed kWp, 0..1."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 1}
+      - name: wind_capacity_factor
+        description: "Wind turbine output as a fraction of rated power, 0..1."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 1}
+      - name: solar_generation_kwh
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0}
+      - name: wind_generation_kwh
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0}
+      - name: solar_data_source
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["pvgis", "modelled"]
+
+  - name: mart_solar_wind_compensation
+    description: >
+      Daily answer to: "when solar generation drops, does wind compensate?". A low-solar day is one
+      where solar capacity factor falls below a fraction of its trailing baseline; wind compensates
+      when its surplus over baseline covers the solar shortfall. Flags are NULL until enough history exists.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [city, observation_date]
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "not coalesce(is_wind_compensating, false) or coalesce(is_low_solar_day, false)"
+    columns:
+      - name: city
+        data_tests: [not_null]
+      - name: observation_date
+        data_tests: [not_null]
+      - name: is_low_solar_day
+        description: "TRUE when solar CF < low_solar_threshold x trailing baseline. NULL without baseline."
+      - name: is_wind_compensating
+        description: "TRUE on a low-solar day when wind surplus >= solar shortfall. NULL without baseline."

@@ -1,0 +1,44 @@
+name: renewable_energy_finops
+version: "1.0.0"
+config-version: 2
+profile: renewable_energy_finops
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+vars:
+  timezone: "Europe/Amsterdam"
+  incremental_lookback_days: 3
+
+  reference_solar_kwp: 1000
+  solar_performance_ratio: 0.80
+  solar_temp_coefficient: -0.004
+  solar_cell_temp_rise_per_wm2: 0.025
+
+  # generic offshore turbine power curve evaluated at 100 m
+  reference_wind_kw: 5000
+  wind_cut_in_ms: 3.0
+  wind_rated_ms: 12.0
+  wind_cut_out_ms: 25.0
+
+  # "Does wind compensate for low solar?" analysis
+  rolling_window_days: 30
+  min_history_days: 7
+  min_hours_per_day: 20
+  low_solar_threshold: 0.5              # low-solar day: solar CF < 50% of trailing baseline
+
+models:
+  renewable_energy_finops:
+    staging:
+      +materialized: view
+      +labels:
+        project: renewable-energy-finops
+        layer: staging
+    mart:
+      +materialized: table
+      +labels:
+        project: renewable-energy-finops
+        layer: gold

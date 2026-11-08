@@ -1,0 +1,14 @@
+renewable_energy_finops:
+  target: prod
+  outputs:
+    prod:
+      type: bigquery
+      method: oauth
+      project: "{{ env_var('GOOGLE_CLOUD_PROJECT') }}"
+      dataset: "{{ env_var('DBT_BQ_DATASET', 'gold_analytical_mart') }}"
+      location: "{{ env_var('BQ_LOCATION', 'us-central1') }}"
+      threads: 4
+      priority: interactive
+      job_execution_timeout_seconds: 300
+      job_retries: 2
+      maximum_bytes_billed: 1000000000

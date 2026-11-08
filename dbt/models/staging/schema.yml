@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_weather_solar
+    description: >
+      Typed, unit-normalised view over the Silver table. Wind speed converted from km/h to m/s,
+      PVGIS power from W to kW, and the local (Europe/Amsterdam) calendar date derived.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [observation_at, station_id]
+    columns:
+      - name: observation_at
+        description: "Observation timestamp (UTC)."
+        data_tests: [not_null]
+      - name: observation_date
+        description: "Calendar date in the local timezone."
+        data_tests: [not_null]
+      - name: station_id
+        data_tests: [not_null]
+      - name: city
+        description: "Local of the station."
+        data_tests:
+          - not_null
+      - name: temperature_c
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: -30, max_value: 45}
+      - name: cloud_cover_pct
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 100}
+      - name: solar_radiation_wm2
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 1200}
+      - name: wind_speed_100m_ms
+        description: "Wind speed at 100 m (typical offshore hub height), m/s."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 60}
